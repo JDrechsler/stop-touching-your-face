@@ -9,7 +9,6 @@ import {
 const demosSection = document.getElementById("demos");
 
 const handDistanceThreshold = 0.13; // You can adjust this value based on your needs
-const alertDelay = 1000; // 1 second
 let poseLandmarker = undefined;
 let runningMode = "IMAGE";
 let enableWebcamButton;
@@ -35,15 +34,16 @@ async function checkHandProximity(results) {
   // console.log("Distance: ", distance)
   if (distance < handDistanceThreshold) {
     console.log("Hand is close to your face!", distance);
-    playAudio();
-    // await new Promise(r => setTimeout(r, alertDelay));
+    speakNo();
+  } else {
+    stopSpeech();
   }
 }
 
-function playAudio() {
-  const audio = document.getElementById("myAudio");
-  audio.play();
-}
+// function playAudio() {
+//   const audio = document.getElementById("myAudio");
+//   audio.play();
+// }
 
 // Before we can use PoseLandmarker class we must wait for it to finish
 // loading. Machine Learning models can be large and take a moment to
@@ -143,5 +143,22 @@ async function predictWebcam() {
   // Call this function again to keep predicting when the browser is ready.
   if (webcamRunning === true) {
     window.requestAnimationFrame(predictWebcam);
+  }
+}
+
+function speakNo() {
+  const utterance = new SpeechSynthesisUtterance("Stop that!!! You don't want to look terrible do you? Stop touching your face. This is really really bad for you. Stop doing it. Just stop it!");
+  utterance.lang = 'en-US';
+  utterance.pitch = 0.8; // You can adjust the pitch
+  utterance.rate = 1; // You can adjust the rate
+  utterance.volume = 1; // You can adjust the volume
+
+  // Speak the utterance
+  window.speechSynthesis.speak(utterance);
+}
+
+function stopSpeech() {
+  if (window.speechSynthesis.speaking) {
+    window.speechSynthesis.cancel();
   }
 }
