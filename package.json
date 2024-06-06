@@ -1,15 +1,11 @@
 {
   "name": "stop-touching-your-face",
   "version": "1.0.0",
-  "description": "Helps stop touching your face using tensorflow",
+  "description": "Helps stop touching your face using mediapipe pose landmarker detection model",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Johannes Drechsler",
-  "license": "ISC",
-  "dependencies": {
-    "@tensorflow/tfjs-node": "^4.19.0",
-    "opencv4nodejs": "^5.6.0"
-  }
+  "license": "ISC"
 }
