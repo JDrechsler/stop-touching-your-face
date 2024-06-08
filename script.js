@@ -9,13 +9,14 @@ import {
 const demosSection = document.getElementById("demos");
 
 const handDistanceThreshold = 0.13; // You can adjust this value based on your needs
+const intervalTimeOut = 1000; // 1 second
+let predictWebcamIntervalId = undefined;
 let poseLandmarker = undefined;
 let runningMode = "IMAGE";
 let enableWebcamButton;
 let webcamRunning = false;
 const videoHeight = "360px";
 const videoWidth = "480px";
-
 
 // Function to calculate the distance between two landmarks
 function calculateLandmarkDistance(landmark1, landmark2) {
@@ -39,12 +40,6 @@ async function checkHandProximity(results) {
     stopSpeech();
   }
 }
-
-// function playAudio() {
-//   const audio = document.getElementById("myAudio");
-//   audio.play();
-// }
-
 // Before we can use PoseLandmarker class we must wait for it to finish
 // loading. Machine Learning models can be large and take a moment to
 // get everything needed to run.
@@ -94,9 +89,11 @@ function enableCam(event) {
   if (webcamRunning === true) {
     webcamRunning = false;
     enableWebcamButton.innerText = "ENABLE PREDICTIONS";
+    setWebcamInterval()
   } else {
     webcamRunning = true;
     enableWebcamButton.innerText = "DISABLE PREDICTIONS";
+    clearWebcamInterval()
   }
 
   // getUsermedia parameters.
@@ -112,7 +109,9 @@ function enableCam(event) {
 }
 
 let lastVideoTime = -1;
+
 async function predictWebcam() {
+  console.log('predict webcam')
   canvasElement.style.height = videoHeight;
   video.style.height = videoHeight;
   canvasElement.style.width = videoWidth;
@@ -142,7 +141,20 @@ async function predictWebcam() {
 
   // Call this function again to keep predicting when the browser is ready.
   if (webcamRunning === true) {
-    window.requestAnimationFrame(predictWebcam);
+    setWebcamInterval();
+  } else {
+    clearWebcamInterval();
+  }
+}
+
+function clearWebcamInterval() {
+  clearInterval(predictWebcamIntervalId)
+  predictWebcamIntervalId = undefined;
+}
+
+function setWebcamInterval() {
+  if (predictWebcamIntervalId === undefined) {
+    predictWebcamIntervalId = setInterval(predictWebcam, intervalTimeOut);
   }
 }
 
@@ -152,7 +164,6 @@ function speakNo() {
   utterance.pitch = 0.8; // You can adjust the pitch
   utterance.rate = 1; // You can adjust the rate
   utterance.volume = 1; // You can adjust the volume
-
   // Speak the utterance
   window.speechSynthesis.speak(utterance);
 }
