@@ -10,13 +10,25 @@ const demosSection = document.getElementById("demos");
 
 const handDistanceThreshold = 0.13; // You can adjust this value based on your needs
 const intervalTimeOut = 500;
+
+const videoHeight = "360px";
+const videoWidth = "480px";
+
+const constraints = {
+  video: true
+};
+
 let predictWebcamIntervalId = undefined;
 let poseLandmarker = undefined;
 let runningMode = "IMAGE";
 let enableWebcamButton;
-let webcamRunning = false;
-const videoHeight = "360px";
-const videoWidth = "480px";
+let disableWebcamButton
+let lastVideoTime = -1;
+
+// Activate the webcam stream.
+navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
+  video.srcObject = stream;
+});
 
 // Function to calculate the distance between two landmarks
 function calculateLandmarkDistance(landmark1, landmark2) {
@@ -77,42 +89,28 @@ const hasGetUserMedia = () => !!navigator.mediaDevices?.getUserMedia;
 // If webcam supported, add event listener to button for when user
 // wants to activate it.
 if (hasGetUserMedia()) {
-  enableWebcamButton = document.getElementById("webcamButton");
-  enableWebcamButton.addEventListener("click", enableCam);
+  enableWebcamButton = document.getElementById("enableWebcamButton");
+  disableWebcamButton = document.getElementById("disableWebcamButton");
+  enableWebcamButton.addEventListener("click", startPredictions);
+  disableWebcamButton.addEventListener("click", stopPredictions);
 } else {
   console.warn("getUserMedia() is not supported by your browser");
 }
 
-// Enable the live webcam view and start detection.
-function enableCam(event) {
+
+function startPredictions() {
   if (!poseLandmarker) {
     console.log("Wait! poseLandmaker not loaded yet.");
     return;
   }
 
-  if (webcamRunning === true) {
-    webcamRunning = false;
-    enableWebcamButton.innerText = "ENABLE PREDICTIONS";
-    setWebcamInterval()
-  } else {
-    webcamRunning = true;
-    enableWebcamButton.innerText = "DISABLE PREDICTIONS";
-    clearWebcamInterval()
-  }
-
-  // getUsermedia parameters.
-  const constraints = {
-    video: true
-  };
-
-  // Activate the webcam stream.
-  navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
-    video.srcObject = stream;
-    video.addEventListener("loadeddata", predictWebcam);
-  });
+  setWebcamInterval();
 }
 
-let lastVideoTime = -1;
+function stopPredictions() {
+  clearWebcamInterval();
+  stopSpeech();
+}
 
 async function predictWebcam() {
   canvasElement.style.height = videoHeight;
@@ -140,13 +138,6 @@ async function predictWebcam() {
       }
       canvasCtx.restore();
     });
-  }
-
-  // Call this function again to keep predicting when the browser is ready.
-  if (webcamRunning === true) {
-    setWebcamInterval();
-  } else {
-    clearWebcamInterval();
   }
 }
 

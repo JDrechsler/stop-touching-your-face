@@ -23,12 +23,16 @@
       and grant access to the webcam if prompted.</p>
 
     <div id="liveView" class="videoView">
-      <button id="webcamButton" class="mdc-button mdc-button--raised">
+      <button id="enableWebcamButton" class="mdc-button mdc-button--raised">
         <span class="mdc-button__ripple"></span>
         <span class="mdc-button__label">ENABLE WEBCAM</span>
       </button>
+      <button id="disableWebcamButton" class="mdc-button mdc-button--raised">
+        <span class="mdc-button__ripple"></span>
+        <span class="mdc-button__label">Disable WEBCAM</span>
+      </button>
       <div style="position: relative;">
-        <video id="webcam" style="width: 1280px; height: 720px;" autoplay playsinline></video>
+        <video id="webcam" style="width: 480px; height: 360px;" autoplay playsinline></video>
         <canvas class="output_canvas" id="output_canvas" width="1280" height="720"
           style="position: absolute; left: 0px; top: 0px;"></canvas>
       </div>
