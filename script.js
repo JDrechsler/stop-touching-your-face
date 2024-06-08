@@ -27,6 +27,10 @@ function calculateLandmarkDistance(landmark1, landmark2) {
 
 // Function to check hand proximity to face (using only 19 for index and 9 for mouth)
 async function checkHandProximity(results) {
+  if (results.landmarks.length === 0) {
+    stopSpeech();
+    return;
+  }
   const handLandmarks = results.landmarks[0]; // Assuming the first pose is the relevant one
   const indexFinger = handLandmarks[19]; // Assuming index finger is at index 19
   const leftMouthCorner = handLandmarks[9]; // Left mouth is in landmark 0 (first pose)
