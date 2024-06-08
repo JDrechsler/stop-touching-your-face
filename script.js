@@ -9,7 +9,7 @@ import {
 const demosSection = document.getElementById("demos");
 
 const handDistanceThreshold = 0.13; // You can adjust this value based on your needs
-const intervalTimeOut = 1000; // 1 second
+const intervalTimeOut = 500;
 let predictWebcamIntervalId = undefined;
 let poseLandmarker = undefined;
 let runningMode = "IMAGE";
@@ -111,7 +111,6 @@ function enableCam(event) {
 let lastVideoTime = -1;
 
 async function predictWebcam() {
-  console.log('predict webcam')
   canvasElement.style.height = videoHeight;
   video.style.height = videoHeight;
   canvasElement.style.width = videoWidth;
