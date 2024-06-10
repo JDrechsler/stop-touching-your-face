@@ -23,6 +23,10 @@ let poseLandmarker = undefined;
 let runningMode = "IMAGE";
 let enableWebcamButton;
 let disableWebcamButton
+/**
+ * @type {HTMLTextAreaElement}
+ */
+let textToSpeechTextArea = document.getElementById("textToSpeechTextArea");
 let lastVideoTime = -1;
 
 // Activate the webcam stream.
@@ -153,7 +157,8 @@ function setWebcamInterval() {
 }
 
 function speakNo() {
-  const utterance = new SpeechSynthesisUtterance("Stop that!!! You don't want to look terrible do you? Stop touching your face. This is really really bad for you. Stop doing it. Just stop it!");
+  const textToSpeech = textToSpeechTextArea.value;
+  const utterance = new SpeechSynthesisUtterance(textToSpeech);
   utterance.lang = 'en-US';
   utterance.pitch = 0.8; // You can adjust the pitch
   utterance.rate = 1; // You can adjust the rate
