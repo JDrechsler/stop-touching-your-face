@@ -5,7 +5,7 @@ const vision = await FilesetResolver.forVisionTasks(
 );
 
 const handDistanceThreshold = 40; // You can adjust this value based on your needs
-const intervalTimeOut = 250;
+const intervalTimeOut = 25;
 
 const videoHeight = "360px";
 const videoWidth = "480px";
