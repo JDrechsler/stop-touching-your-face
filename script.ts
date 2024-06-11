@@ -5,7 +5,7 @@ const vision = await FilesetResolver.forVisionTasks(
 );
 
 const handDistanceThreshold = 40; // You can adjust this value based on your needs
-const intervalTimeOut = 25;
+const intervalTimeOut = 250;
 
 const videoHeight = "360px";
 const videoWidth = "480px";
@@ -25,14 +25,7 @@ const canvasElement = document.getElementById(
 const canvasCtx = canvasElement.getContext("2d")!;
 const drawingUtils = new DrawingUtils(canvasCtx)
 
-// Activate the webcam stream.
-navigator.mediaDevices.getUserMedia({ video: true }).then((stream) => {
-  videoElement.srcObject = stream;
-});
-
-
 const createHandLandmarker = async () => {
-
   handLandmarker = await HandLandmarker.createFromOptions(vision, {
     baseOptions: {
       modelAssetPath: `https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task`,
@@ -54,25 +47,6 @@ async function createFaceLandmarker() {
     numFaces: 1
   });
 }
-
-await createHandLandmarker();
-await createFaceLandmarker();
-demosSection.classList.remove("invisible");
-
-// Check if webcam access is supported.
-const hasGetUserMedia = () => !!navigator.mediaDevices?.getUserMedia;
-
-// If webcam supported, add event listener to button for when user
-// wants to activate it.
-if (hasGetUserMedia()) {
-  enableWebcamButton = document.getElementById("enableWebcamButton")!;
-  disableWebcamButton = document.getElementById("disableWebcamButton")!;
-  enableWebcamButton.addEventListener("click", startPredictions);
-  disableWebcamButton.addEventListener("click", stopPredictions);
-} else {
-  console.warn("getUserMedia() is not supported by your browser");
-}
-
 
 function startPredictions() {
   if (!handLandmarker || !faceLandmarker) {
@@ -130,7 +104,6 @@ async function predictWebcam() {
     canvasCtx.restore();
   }
 }
-
 
 function isOverlapping(handLandmarks: HandLandmarkerResult, faceLandmarks: FaceLandmarkerResult) {
   if (handLandmarks.landmarks.length === 0 || faceLandmarks.faceLandmarks.length === 0) {
@@ -229,3 +202,27 @@ function stopSpeech() {
     window.speechSynthesis.cancel();
   }
 }
+
+// Activate the webcam stream.
+navigator.mediaDevices.getUserMedia({ video: true }).then((stream) => {
+  videoElement.srcObject = stream;
+});
+
+// Check if webcam access is supported.
+const hasGetUserMedia = () => !!navigator.mediaDevices?.getUserMedia;
+
+// If webcam supported, add event listener to button for when user
+// wants to activate it.
+if (hasGetUserMedia()) {
+  enableWebcamButton = document.getElementById("enableWebcamButton")!;
+  disableWebcamButton = document.getElementById("disableWebcamButton")!;
+  enableWebcamButton.addEventListener("click", startPredictions);
+  disableWebcamButton.addEventListener("click", stopPredictions);
+} else {
+  console.warn("getUserMedia() is not supported by your browser");
+}
+
+await createHandLandmarker();
+await createFaceLandmarker();
+demosSection.classList.remove("invisible");
+startPredictions();
