@@ -225,4 +225,3 @@ if (hasGetUserMedia()) {
 await createHandLandmarker();
 await createFaceLandmarker();
 demosSection.classList.remove("invisible");
-startPredictions();
