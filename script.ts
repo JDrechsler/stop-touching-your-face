@@ -6,7 +6,7 @@ const vision = await FilesetResolver.forVisionTasks(
 
 const handDistanceThresholdMin = 1; // You can adjust this value based on your needs
 const handDistanceThresholdMax = 18; // You can adjust this value based on your needs
-const intervalTimeOut = 500;
+const intervalTimeOut = 100;
 
 const videoHeight = "360px";
 const videoWidth = "480px";
@@ -33,6 +33,9 @@ const createHandLandmarker = async () => {
       delegate: "GPU"
     },
     runningMode: "VIDEO",
+    minHandDetectionConfidence: 0.9,
+    minHandPresenceConfidence: 0.9,
+    minTrackingConfidence: 0.9,
     numHands: 2
   });
 };
@@ -45,6 +48,9 @@ async function createFaceLandmarker() {
     },
     outputFaceBlendshapes: true,
     runningMode: "VIDEO",
+    minFaceDetectionConfidence: 0.9,
+    minFacePresenceConfidence: 0.9,
+    minTrackingConfidence: 0.9,
     numFaces: 1
   });
 }
@@ -86,6 +92,7 @@ async function predictWebcam() {
       drawingUtils.drawLandmarks(landmarks, { color: "#FF0000", lineWidth: 2 });
     }
 
+
     for (const landmarks of faceMarkerResults.faceLandmarks) {
       drawingUtils.drawConnectors(landmarks, FaceLandmarker.FACE_LANDMARKS_FACE_OVAL, {
         color: "red", lineWidth: 2
@@ -117,8 +124,8 @@ function isOverlapping(handLandmarks: HandLandmarkerResult, faceLandmarks: FaceL
   const handLeftNormalizedLandmarks = handLandmarks.landmarks[0];
   const handRightNormalizedLandmarks = handLandmarks.landmarks[1];
 
-  let handLeftLandmarksInScreenCoordinates;
-  let handRightLandmarksInScreenCoordinates;
+  let handLeftLandmarksInScreenCoordinates = undefined;
+  let handRightLandmarksInScreenCoordinates = undefined;
 
 
   if (!faceNormalizedLandmarks) return false;
@@ -156,7 +163,6 @@ function isOverlapping(handLandmarks: HandLandmarkerResult, faceLandmarks: FaceL
         const dy = handPoint.y - facePoint.y;
         const distance = Math.sqrt(dx * dx + dy * dy);
         if (distance <= handDistanceThresholdMax && distance >= handDistanceThresholdMin) {
-          console.log({ 'distance face handLeft': distance })
           return true;
         }
       }
@@ -168,7 +174,6 @@ function isOverlapping(handLandmarks: HandLandmarkerResult, faceLandmarks: FaceL
         const dy = handPoint.y - facePoint.y;
         const distance = Math.sqrt(dx * dx + dy * dy);
         if (distance <= handDistanceThresholdMax && distance >= handDistanceThresholdMin) {
-          console.log({ 'distance face handRight': distance })
           return true;
         }
       }
