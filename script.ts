@@ -4,8 +4,9 @@ const vision = await FilesetResolver.forVisionTasks(
   "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.0/wasm"
 );
 
-const handDistanceThreshold = 40; // You can adjust this value based on your needs
-const intervalTimeOut = 25;
+const handDistanceThresholdMin = 1; // You can adjust this value based on your needs
+const handDistanceThresholdMax = 18; // You can adjust this value based on your needs
+const intervalTimeOut = 500;
 
 const videoHeight = "360px";
 const videoWidth = "480px";
@@ -154,8 +155,8 @@ function isOverlapping(handLandmarks: HandLandmarkerResult, faceLandmarks: FaceL
         const dx = handPoint.x - facePoint.x;
         const dy = handPoint.y - facePoint.y;
         const distance = Math.sqrt(dx * dx + dy * dy);
-        if (distance <= handDistanceThreshold) {
-          // console.log({ 'distance face handLeft': distance })
+        if (distance <= handDistanceThresholdMax && distance >= handDistanceThresholdMin) {
+          console.log({ 'distance face handLeft': distance })
           return true;
         }
       }
@@ -166,8 +167,8 @@ function isOverlapping(handLandmarks: HandLandmarkerResult, faceLandmarks: FaceL
         const dx = handPoint.x - facePoint.x;
         const dy = handPoint.y - facePoint.y;
         const distance = Math.sqrt(dx * dx + dy * dy);
-        if (distance <= handDistanceThreshold) {
-          // console.log({ 'distance face handRight': distance })
+        if (distance <= handDistanceThresholdMax && distance >= handDistanceThresholdMin) {
+          console.log({ 'distance face handRight': distance })
           return true;
         }
       }
