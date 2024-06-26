@@ -6,6 +6,7 @@ const vision = await FilesetResolver.forVisionTasks(
 
 const handDistanceThresholdMin = 1; // You can adjust this value based on your needs
 const handDistanceThresholdMax = 18; // You can adjust this value based on your needs
+const detectionAccuracy = 0.65;
 const intervalTimeOut = 100;
 
 const videoHeight = "360px";
@@ -33,9 +34,9 @@ const createHandLandmarker = async () => {
       delegate: "GPU"
     },
     runningMode: "VIDEO",
-    minHandDetectionConfidence: 0.9,
-    minHandPresenceConfidence: 0.9,
-    minTrackingConfidence: 0.9,
+    minHandDetectionConfidence: detectionAccuracy,
+    minHandPresenceConfidence: detectionAccuracy,
+    minTrackingConfidence: detectionAccuracy,
     numHands: 2
   });
 };
@@ -48,9 +49,9 @@ async function createFaceLandmarker() {
     },
     outputFaceBlendshapes: true,
     runningMode: "VIDEO",
-    minFaceDetectionConfidence: 0.9,
-    minFacePresenceConfidence: 0.9,
-    minTrackingConfidence: 0.9,
+    minFaceDetectionConfidence: detectionAccuracy,
+    minFacePresenceConfidence: detectionAccuracy,
+    minTrackingConfidence: detectionAccuracy,
     numFaces: 1
   });
 }
