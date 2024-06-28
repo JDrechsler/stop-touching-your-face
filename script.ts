@@ -6,7 +6,7 @@ const vision = await FilesetResolver.forVisionTasks(
 
 const handDistanceThresholdMin = 1; // You can adjust this value based on your needs
 const handDistanceThresholdMax = 18; // You can adjust this value based on your needs
-const detectionAccuracy = 0.75;
+const detectionAccuracy = 0.85;
 const intervalTimeOut = 100;
 
 const videoHeight = "360px";
